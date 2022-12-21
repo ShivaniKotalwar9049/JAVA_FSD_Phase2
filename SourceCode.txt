@@ -1,0 +1,1459 @@
+Surce code
+Bean :=>
+Classes
+package com.learn.bean;
+
+public class Classes {
+	
+	private int Classid;
+	private String Name;
+	public int getClassid() {
+		return Classid;
+	}
+	public void setClassid(int classid) {
+		Classid = classid;
+	}
+	public String getName() {
+		return Name;
+	}
+	public void setName(String name) {
+		Name = name;
+	}
+	
+	
+
+}
+
+Student
+package com.learn.bean;
+
+public class Student {
+	private int sid;
+	private String fname;
+	private String lname;
+	
+	private Long Phone;
+	private String ClassName;
+	public int getSid() {
+		return sid;
+	}
+	public void setSid(int sid) {
+		this.sid = sid;
+	}
+	public String getFname() {
+		return fname;
+	}
+	public void setFname(String fname) {
+		this.fname = fname;
+	}
+	public String getLname() {
+		return lname;
+	}
+	public void setLname(String lname) {
+		this.lname = lname;
+	}
+	public Long getPhone() {
+		return Phone;
+	}
+	public void setPhone(Long phone) {
+		Phone = phone;
+	}
+	public String getClassName() {
+		return ClassName;
+	}
+	public void setClassName(String className) {
+		ClassName = className;
+	}
+	
+	
+
+}
+
+Subject
+package com.learn.bean;
+
+public class Subject {
+	private int subid;
+	private String subname;
+	
+	public int getSubid() {
+		return subid;
+	}
+	public void setSubid(int subid) {
+		this.subid = subid;
+	}
+	public String getSubname() {
+		return subname;
+	}
+	public void setSubname(String subname) {
+		this.subname = subname;
+	}
+	
+
+}
+
+Teacher
+package com.learn.bean;
+
+public class Teacher {
+	private int tid;
+	private String fname;
+	private String lname;
+	private int age;
+	public int getTid() {
+		return tid;
+	}
+	public void setTid(int tid) {
+		this.tid = tid;
+	}
+	public String getFname() {
+		return fname;
+	}
+	public void setFname(String fname) {
+		this.fname = fname;
+	}
+	public String getLname() {
+		return lname;
+	}
+	public void setLname(String lname) {
+		this.lname = lname;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	
+	
+
+}
+
+
+Dao:=>
+Classes
+
+package com.learn.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.learn.bean.Classes;
+import com.learn.dbutil.DbUtil;
+
+public class ClassesDao {
+	
+	public int insert(Classes C) throws ClassNotFoundException, SQLException
+	{
+		Connection con=DbUtil.dbConn();
+		if(con!=null)
+		{
+			System.out.println("connection established");
+			
+		}
+		else
+		{
+			System.out.println("connection not established");
+		}
+		
+		String sql="insert into Classes values(?,?)";
+		PreparedStatement ps=con.prepareStatement(sql);
+		ps.setInt(1,C.getClassid());
+		ps.setString(2, C.getName());
+		
+		return ps.executeUpdate();
+	}
+	public List<Classes> display() throws ClassNotFoundException, SQLException{
+		Connection con=DbUtil.dbConn();
+		if(con!=null) {
+			System.out.println("connection with dB is established ");
+		}
+		else {
+			System.out.println("connection failed ");
+		}
+		List<Classes> list=new ArrayList<Classes>();
+		String sql="select * from Classes";
+		PreparedStatement ps=con.prepareStatement(sql);
+		ResultSet rs=ps.executeQuery();
+		while(rs.next()) {
+			Classes C=new Classes();
+			C.setClassid(rs.getInt(1));
+			C.setName(rs.getString(2));
+			list.add(C);
+		}
+		return list;
+}
+	
+	public int edit(Classes C) throws SQLException, ClassNotFoundException
+	{
+		Connection con=DbUtil.dbConn();
+		if (con!=null)
+		{
+			System.out.println("connection establised");
+		}
+		else
+		{
+			System.out.println("connection not established");
+		}
+	
+	String sql="Update  Classes set name=? where id=? ";
+	PreparedStatement ps=con.prepareStatement(sql);
+	System.out.println("enter  id");
+	ps.setInt(2, C.getClassid());
+	System.out.println("enter class name");
+    ps.setString(2, C.getName());
+	return ps.executeUpdate();
+	
+	
+	}
+	public int delete(Classes C) throws ClassNotFoundException, SQLException {
+		Connection con=DbUtil.dbConn();
+		if(con!=null) {
+			System.out.println("connection with dB is established ");
+		}
+		else {
+			System.out.println("connection failed ");
+		}
+		String sql="delete from classes  where id=?";
+		PreparedStatement ps=con.prepareStatement(sql);
+		ps.setInt(1,C.getClassid());
+		
+		int rows=ps.executeUpdate();
+		return rows;
+	}
+	}
+Student
+package com.learn.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+
+import com.learn.bean.Student;
+import com.learn.bean.Teacher;
+import com.learn.dbutil.DbUtil;
+
+
+
+
+public class StudentDao {
+	
+	
+public	int insert(Student s) throws ClassNotFoundException, SQLException {
+
+	Connection con=DbUtil.dbConn();
+	if(con!=null)
+	{
+		System.out.println("connection established");
+		
+	}
+	else
+	{
+		System.out.println("connection not established");
+	}
+		String sql="insert into student values(?,?,?,?,?)";
+		PreparedStatement ps=con.prepareStatement(sql);
+		ps.setInt(1, s.getSid());
+		ps.setString(2, s.getFname());
+		ps.setString(3, s.getLname());
+		ps.setLong(4, s.getPhone());
+		ps.setString(5, s.getClassName());
+		return ps.executeUpdate();
+
+}
+
+
+		public List <Student > display() throws ClassNotFoundException, SQLException {
+			Connection con=DbUtil.dbConn();
+
+			if(con!=null)
+			{
+				System.out.println("connection established");
+				
+			}
+			else
+			{
+				System.out.println("connection not established");
+			}
+			List<Student> list=new ArrayList<Student>();
+			String sql="select * from Student";
+			PreparedStatement ps=con.prepareStatement(sql);
+			ResultSet rs=ps.executeQuery();
+			while(rs.next()) {
+				Student s=new Student();
+				s.setSid(rs.getInt(1));
+			    s.setFname(rs.getString(2));
+			    s.setLname(rs.getString(3));
+			    s.setPhone(rs.getLong(4));
+			    s.setClassName(rs.getString(5));
+			    list.add(s);
+			
+			}
+			return list;
+			
+}
+		
+
+		public int edit(Student S) throws SQLException, ClassNotFoundException
+		{
+			Connection con=DbUtil.dbConn();
+			if (con!=null)
+			{
+				System.out.println("connection establised");
+			}
+			else
+			{
+				System.out.println("connection not established");
+			}
+		
+		String sql="Update  Student set fname=? where sid=? ";
+		PreparedStatement ps=con.prepareStatement(sql);
+		System.out.println("enter student id");
+		ps.setInt(2, S.getSid());;
+		System.out.println("enter name");
+		ps.setString(1, S.getFname());
+		return ps.executeUpdate();
+		
+		
+		}
+		
+		public int delete(Student S) throws ClassNotFoundException, SQLException {
+			Connection con=DbUtil.dbConn();
+			if(con!=null) {
+				System.out.println("connection with dB is established ");
+			}
+			else {
+				System.out.println("connection failed ");
+			}
+			String sql="delete from student  where sid=?";
+			PreparedStatement ps=con.prepareStatement(sql);
+			ps.setInt(1,S.getSid());
+			
+			int rows=ps.executeUpdate();
+			return rows;
+		}
+
+		
+}
+
+Subject
+package com.learn.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.learn.bean.Subject;
+import com.learn.bean.Teacher;
+import com.learn.dbutil.DbUtil;
+
+public class SubjectDao {
+	public int insert(Subject S) throws ClassNotFoundException, SQLException
+	{
+		Connection con=DbUtil.dbConn();
+		if(con!=null)
+		{
+			System.out.println("connection established");
+			
+		}
+		else
+		{
+			System.out.println("connection not established");
+		}
+		
+		String sql="insert into Subject values(?,?)";
+		PreparedStatement ps=con.prepareStatement(sql);
+		ps.setInt(1,S.getSubid());
+		ps.setString(2,S.getSubname());
+		
+		return ps.executeUpdate();
+	}
+	public List<Subject> display() throws ClassNotFoundException, SQLException{
+		Connection con=DbUtil.dbConn();
+		if(con!=null) {
+			System.out.println("connection with dB is established ");
+		}
+		else {
+			System.out.println("connection failed ");
+		}
+		List<Subject> list=new ArrayList<Subject>();
+		String sql="select * from Subject";
+		PreparedStatement ps=con.prepareStatement(sql);
+		ResultSet rs=ps.executeQuery();
+		while(rs.next()) {
+			Subject s=new Subject();
+			s.setSubid(rs.getInt(1));
+			s.setSubname(rs.getString(2));
+			
+			
+			list.add(s);
+		}
+		return list;
+}
+	
+	public int edit(Subject s) throws SQLException, ClassNotFoundException
+	{
+		Connection con=DbUtil.dbConn();
+		if (con!=null)
+		{
+			System.out.println("connection establised");
+		}
+		else
+		{
+			System.out.println("connection not established");
+		}
+	
+	String sql="Update  Subject set name=? where id=? ";
+	PreparedStatement ps=con.prepareStatement(sql);
+	System.out.println("enter subject id");
+	ps.setInt(2, s.getSubid());
+	System.out.println("enter name");
+	ps.setString(1, s.getSubname());
+	return ps.executeUpdate();
+	
+	
+	}
+	public int delete(Subject s) throws ClassNotFoundException, SQLException {
+		Connection con=DbUtil.dbConn();
+		if(con!=null) {
+			System.out.println("connection with dB is established ");
+		}
+		else {
+			System.out.println("connection failed ");
+		}
+		String sql="delete from teacher  where Tid=?";
+		PreparedStatement ps=con.prepareStatement(sql);
+		ps.setInt(1,s.getSubid());
+		
+		int rows=ps.executeUpdate();
+		return rows;
+	}
+	
+
+}
+Teacher
+package com.learn.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.learn.bean.Teacher;
+import com.learn.dbutil.DbUtil;
+
+public class TeachersDao {
+	public int insert(Teacher T) throws ClassNotFoundException, SQLException
+	{
+		Connection con=DbUtil.dbConn();
+		if(con!=null)
+		{
+			System.out.println("connection established");
+			
+		}
+		else
+		{
+			System.out.println("connection not established");
+		}
+		
+		String sql="insert into Teacher values(?,?,?,?)";
+		PreparedStatement ps=con.prepareStatement(sql);
+		ps.setInt(1,T.getTid());
+		ps.setInt(2,T.getAge());
+		ps.setString(3,T.getFname());
+		ps.setString(4,T.getLname());
+		return ps.executeUpdate();
+	}
+	public List<Teacher> display() throws ClassNotFoundException, SQLException{
+		Connection con=DbUtil.dbConn();
+		if(con!=null) {
+			System.out.println("connection with dB is established ");
+		}
+		else {
+			System.out.println("connection failed ");
+		}
+		List<Teacher> list=new ArrayList<Teacher>();
+		String sql="select * from Teacher";
+		PreparedStatement ps=con.prepareStatement(sql);
+		ResultSet rs=ps.executeQuery();
+		while(rs.next()) {
+			Teacher t=new Teacher();
+			t.setTid(rs.getInt(1));
+			t.setFname(rs.getString(2));
+			t.setLname(rs.getString(3));
+			t.setAge(rs.getInt(4));
+			
+			list.add(t);
+		}
+		return list;
+}
+	
+	public int edit(Teacher T) throws SQLException, ClassNotFoundException
+	{
+		Connection con=DbUtil.dbConn();
+		if (con!=null)
+		{
+			System.out.println("connection establised");
+		}
+		else
+		{
+			System.out.println("connection not established");
+		}
+	
+	String sql="Update  Teacher set name=? where id=? ";
+	PreparedStatement ps=con.prepareStatement(sql);
+	System.out.println("enter teachers id");
+	ps.setInt(2, T.getTid());
+	System.out.println("enter name");
+	ps.setString(1, T.getFname());
+	return ps.executeUpdate();
+	
+	
+	}
+	public int delete(Teacher T) throws ClassNotFoundException, SQLException {
+		Connection con=DbUtil.dbConn();
+		if(con!=null) {
+			System.out.println("connection with dB is established ");
+		}
+		else {
+			System.out.println("connection failed ");
+		}
+		String sql="delete from teacher  where Tid=?";
+		PreparedStatement ps=con.prepareStatement(sql);
+		ps.setInt(1,T.getTid());
+		
+		int rows=ps.executeUpdate();
+		return rows;
+	}
+}
+
+Dbutil:=>
+
+package com.learn.dbutil;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class DbUtil {
+	public static final String DRIVER_CLASS="com.mysql.jdbc.Driver";
+	public static final String DB_URL="jdbc:mysql://localhost:3306/db7";
+	public static final String USERNAME="root";
+	public static final String PASSWORD="1234";
+		public static Connection dbConn() throws SQLException, ClassNotFoundException {
+			//register the driver
+			Class.forName(DRIVER_CLASS);
+			//connection statement
+			Connection con=DriverManager.getConnection(DB_URL,USERNAME,PASSWORD);
+			return con;
+		}
+
+}
+
+Servelet:=
+AdminController
+package com.servlet;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Servlet implementation class AdminController
+ */
+public class AdminController extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public AdminController() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
+
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
+	}
+
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String Username=request.getParameter("username");
+	    String Password=request.getParameter("password");
+	    PrintWriter pw= response.getWriter();
+	    
+	    
+	    if(Username.equals(Password))
+	    {
+	    	 
+	
+	    	response.setContentType("text/html");
+	    	RequestDispatcher rd=request.getRequestDispatcher("Welcome.jsp");
+	    	rd.include(request, response);
+	    	}
+	    else
+	    {
+	    
+	    	RequestDispatcher rd=request.getRequestDispatcher("login.jsp");
+	    	rd.include(request, response);
+	    }
+	}
+
+}
+
+Webapp(jsp pages)
+Login.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Collage Managment System</title>
+</head>
+<body>
+ 
+<h2 style="text-align:center; Color:green"> Welcome To Your Collage Login Page!</h2>
+<br/>
+<br/>
+
+<div style="text-align:center;">
+<form action="login" method="post">
+<table border="1" style="text-align:center; margin-left:auto;margin-right:auto;" > 
+<tr><td><br/>&nbsp;&nbsp;Please Enter Your Username: <input type="text" name="username" placeholder="username">&nbsp;&nbsp;<br/><br/>
+&nbsp;&nbsp;Please Enter Your Password: <input type="password" name="password" placeholder="password">&nbsp;&nbsp;<br/><br/></td></tr>
+<tr><td><input type="submit" value="login"></td></tr>
+</table>
+</form>
+</div>
+<br/>
+<br/>
+<br/>
+<br/>
+ 
+
+</body>
+</html>
+Welcome.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h1> Welcome to learners academy</h1>
+<table border="1">
+<th>Add Items</th>
+	<th>Edit Items</th>
+	  <th>Delete Items</th>
+</tr>
+<tr>
+	<td><a href="AddClasses.jsp">Add Class</a><br></td>
+	<td><a href="EditClass.jsp">Edit Classes</a><br></td>
+	<td><a href="DeleteClass.jsp">Delete Classes</a><br></td>
+</tr>
+<tr>
+	<td><a href="AddSubject.jsp">Add Subject</a><br></td>
+	<td><a href="EditSubject.jsp">Edit Subject</a><br></td>
+	<td><a href="DeleteSubject.jsp">Delete Subject</a><br></td>
+</tr>
+<tr>
+	<td><a href="AddTeacher.jsp">Add Teacher</a><br></td>
+	<td><a href="EditTeacher.jsp">Edit Teacher</a><br></td>
+	<td><a href="DeleteTeacher.jsp">DeleteTeacher</a><br></td>
+</tr>
+<tr>
+	<td><a href="AddStudent.jsp">Add Student</a><br></td>
+	<td><a href="EditStudent.jsp">Edit Students</a><br></td>
+	<td><a href="DeleteStudent.jsp">Delete Student</a><br></td>
+</tr>
+</table>
+
+</body>
+</html>
+AddClasses.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+     <%@ page import="com.learn.dao.ClassesDao" %>
+    <%@ page import="com.learn.bean.Classes" %>
+    <%@page import= "java.util.*" %>
+    
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Class</title>
+</head>
+<body>
+<h1><i>Adding a Class</i></h1>
+<form action="addControllerclasses.jsp">
+<table>
+<tr><td>id</td><td><input type="text" name="classid"></td></tr>
+<tr><td>Name</td><td><input type="text" name="name"></td></tr>
+
+
+<tr><td><input type="submit" value="add class"></td></tr>
+
+
+</table>
+</form>
+<table border="1">
+<tr><th>Class ID</th><th>Class Name</th><th>Edit Action</th><th>Delete Action</th></tr>
+<%
+ClassesDao dao=new ClassesDao();
+List<Classes> list=dao.display();
+for(Classes c:list){
+%>
+<tr><td><%=c.getClassid() %></td><td><%=c.getName() %></td><td><a href="editClass.jsp?classid=<%=c.getClassid()%>">Edit Class</a></td><td><a href="DeleteClass.jsp?classid=<%=c.getClassid()%>">Delete Class</a></tr>
+<%} %>
+</table>
+</body>
+</html>
+AddStudent.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+     <%@ page import="com.learn.dao.StudentDao" %>
+    <%@ page import="com.learn.bean.Student" %>
+    <%@page import="java.util.List"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h1><i>Adding a Students</i></h1>
+<form action="addControllerstudent.jsp">
+<table>
+<tr><td>id</td><td><input type="text" name="id"></td></tr>
+<tr><td>FirstName</td><td><input type="text" name="section"></tr></td>
+
+<tr><td>Last Name</td><td><input type="text" name="teacher"></td></tr>
+
+<!--  <tr><td>Class</td><td><input type="text" name="subject"></td></tr>-->
+<!--  <tr><td>Age</td><td><input type="text" name="subject"></td></tr> -->
+
+<tr><td><input type="submit" value="add student"></td></tr>
+<table border="1">
+<tr><th>Student ID</th><th>Student First name</th><th>Student Last Name</th><th>Phone no</th><th>ClassName</th><th>Edit Action</th><th>DeleteAction</th></tr>
+<%
+StudentDao dao=new StudentDao();
+List<Student> list=dao.display();
+for(Student s:list){
+%>
+<tr><td><%=s.getSid()%></td><td><%=s.getFname() %></td><td><%=s.getLname() %></td><td><%=s.getPhone() %></td><td><%=s.getClassName() %></td><td><a href="editstudent.jsp?sid=<%=s.getSid()%>">Edit Student</a></td><td><a href="Deletestudent.jsp?sid=<%=s.getSid()%>">Delete student</a></td></tr>
+
+<%} %>
+</table>
+
+
+</table>
+</form>
+</body>
+</html>
+AddSubject.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+      <%@ page import="com.learn.dao.SubjectDao" %>
+    <%@ page import="com.learn.bean.Subject" %>
+    <%@page import= "java.util.*" %>
+    
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h1><i>Adding a Subject</i></h1>
+<form action="addControllersubject.jsp">
+<table>
+<tr><td> subject id</td><td><input type="text" name="subid"></td></tr>
+<tr><td> Subject name</td><td><input type="text" name="subname"></td></tr>
+<tr><td><input type="submit" value="add subject"></td></tr>
+</table>
+</form>
+<table border="1">
+<tr><th>Subject ID</th><th>Subject name</th><th>Edit Action</th><th>DeleteAction</th></tr>
+<%
+SubjectDao dao=new SubjectDao();
+List<Subject> list=dao.display();
+for(Subject s:list){
+%>
+<tr><td><%=s.getSubid()%></td><td><%=s.getSubname()%></td><td><a href="editsubject.jsp?subid=<%=s.getSubid()%>">Edit Subject</a></td><td><a href="Deletesubject.jsp?subid=<%=s.getSubid()%>">Delete Subject</a></td></tr>
+
+<%} %>
+</table>
+</body>
+</html>
+AddTeacher.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+      <%@ page import="com.learn.dao.TeachersDao" %>
+    <%@ page import="com.learn.bean.Teacher" %>
+    <%@page import= "java.util.*" %>
+    
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h1><i>Adding a Teacher</i></h1>
+<form action="addControllerteacher.jsp">
+<table>
+<tr><td>id</td><td><input type="text" name="id"></td></tr>
+<tr><td>First Name</td><td><input type="text" name="section"></td></tr>
+<tr><td>Last Name</td><td><input type="text" name="teacher"></td></tr>
+<tr><td>Age</td><td><input type="text" name="subject"></td></tr>
+
+<tr><td><input type="submit" value="add taecher"></td></tr>
+</table>
+</form>
+<table border="1">
+<tr><th>Teacher ID</th><th>Teacher First name</th><th>Teacher Last Name</th><th>Age</th><th>Edit Action</th><th>DeleteAction</th></tr>
+<%
+TeachersDao dao=new TeachersDao();
+List<Teacher> list=dao.display();
+for(Teacher t:list){
+%>
+<tr><td><%=t.getTid()%></td><td><%=t.getFname() %></td><td><%=t.getLname() %></td><td><%=t.getAge() %></td><td><a href="editteacher.jsp?tid=<%=t.getTid()%>">Edit Teacher</a></td><td><a href="Deleteteacher.jsp?tid=<%=t.getTid()%>">Delete Teacher</a></td></tr>
+
+<%} %>
+</table>
+</body>
+</html>
+addControllerclasses.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+    <%@ page import="com.learn.dao.ClassesDao" %>
+    <%@ page import="com.learn.bean.Classes" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<%
+ClassesDao dao=new ClassesDao();
+Classes c =new Classes();
+c.setClassid(Integer.parseInt(request.getParameter("id")));
+c.setName(request.getParameter("name"));
+int row=dao.insert(c);
+if(row>0){
+	response.sendRedirect("success.jsp");
+}
+else{
+	response.sendRedirect("fail.jsp");
+}
+%>
+</body>
+</html>
+addControllerstudent.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+     <%@ page import="com.learn.dao.StudentDao" %>
+    <%@ page import="com.learn.bean.Student" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<%
+StudentDao dao=new StudentDao();
+Student s=new Student();
+s.setSid(Integer.parseInt(request.getParameter("id")));
+s.setFname(request.getParameter("fname"));
+s.setLname(request.getParameter("lname"));
+
+int row=dao.insert(s);
+if(row>0){
+	response.sendRedirect("success.jsp");
+}
+else{
+	response.sendRedirect("fail.jsp");
+}
+%>
+</body>
+</html>
+addControllersubject.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+     <%@ page import="com.learn.dao.SubjectDao" %>
+    <%@ page import="com.learn.bean.Subject" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<%
+SubjectDao dao=new SubjectDao();
+Subject s=new Subject();
+s.setSubid(Integer.parseInt(request.getParameter("subid")));
+s.setSubname(request.getParameter("subname"));
+
+
+
+int row=dao.insert(s);
+if(row>0){
+	response.sendRedirect("success.jsp");
+}
+else{
+	response.sendRedirect("fail.jsp");
+}
+%>
+</body>
+</html>
+addControllerteacher.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+    <%@ page import="com.learn.dao.TeachersDao" %>
+    <%@ page import="com.learn.bean.Teacher" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<%
+TeachersDao dao=new TeachersDao();
+Teacher teacher=new Teacher();
+teacher.setTid(Integer.parseInt(request.getParameter("id")));
+teacher.setFname(request.getParameter("fname"));
+teacher.setLname(request.getParameter("lname"));
+teacher.setAge(Integer.parseInt(request.getParameter("age")));
+
+
+int row=dao.insert(teacher);
+if(row>0){
+	response.sendRedirect("success.jsp");
+}
+else{
+	response.sendRedirect("fail.jsp");
+}
+%>
+</body>
+</html>
+DeleteClass.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h1><i>Delete Class</i></h1>
+<form action="deleteControllerclasses.jsp">
+<input type="hidden" name="id" value=<%=request.getParameter("classid") %>>
+Class Name to be deleted <input type="text" name="name">
+<input type="submit" value="delete">
+
+</form>
+</body>
+</html>
+DeleteStudent.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h1><i>Delete the student name</i></h1>
+<form action="deleteControllerstudent.jsp">
+<input type="hidden" name="sid" value=<%=request.getParameter("id") %>>
+First Name to be deleted <input type="text" name="fname">
+Last Name to be deleted<input type="text" name="lname">
+
+</form>
+</body>
+</html>
+DeleteSubject.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h1><i>Delete the subject name</i></h1>
+<form action="deleteControllersubject.jsp">
+<input type="hidden" name="subid" value=<%=request.getParameter("subid") %>>
+Subject name to be deleted <input type="text" name="subname">
+<input type="submit" value="delete">
+
+</form>
+</body>
+</html>
+DeleteTeacher.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h1><i>Delete the teacher id</i></h1>
+<form action="deleteControllerteacher.jsp">
+<input type="hidden" name="tid" value=<%=request.getParameter("id") %>>
+ID to be deleted <input type="text" name="tid">
+<input type="submit" value="delete">
+
+</form>
+</body>
+</html>
+deleteControlerclasses.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+     <%@ page import="com.learn.dao.ClassesDao" %>
+    <%@ page import="com.learn.bean.Classes" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<%
+ClassesDao dao=new ClassesDao();
+Classes c=new Classes();
+c.setClassid(Integer.parseInt(request.getParameter("classid")));
+
+c.setName(request.getParameter("name"));
+
+int row=dao.delete(c);
+if(row>0){
+	response.sendRedirect("successdelete.jsp");
+}
+else{
+	response.sendRedirect("fail.jsp");
+}
+%>
+</body>
+</html>
+deleteControllerstudent.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+     <%@ page import="com.learn.dao.StudentDao" %>
+    <%@ page import="com.learn.bean.Student" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<%
+StudentDao dao=new StudentDao();
+Student student=new Student();
+student.setSid(Integer.parseInt(request.getParameter("id")));
+student.setFname(request.getParameter("fname"));
+student.setLname(request.getParameter("lname"));
+
+
+int row=dao.delete(student);
+if(row>0){
+	response.sendRedirect("successdelete.jsp");
+}
+else{
+	response.sendRedirect("fail.jsp");
+}
+%>
+</body>
+</html>
+deleteControllersubject.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+    <%@ page import="com.learn.dao.SubjectDao" %>
+    <%@ page import="com.learn.bean.Subject" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<%
+SubjectDao dao=new SubjectDao();
+Subject subject=new Subject();
+subject.setSubid(Integer.parseInt(request.getParameter("subid")));
+subject.setSubname(request.getParameter("subname"));
+
+
+
+int row=dao.delete(subject);
+if(row>0){
+	response.sendRedirect("successdelete.jsp");
+}
+else{
+	response.sendRedirect("fail.jsp");
+}
+%>
+</body>
+</html>
+deleteControllerteacher.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+    <%@ page import="com.learn.dao.TeachersDao" %>
+    <%@ page import="com.learn.bean.Teacher" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<%
+TeachersDao dao=new TeachersDao();
+Teacher teacher=new Teacher();
+teacher.setTid(Integer.parseInt(request.getParameter("id")));
+
+
+
+int row=dao.delete(teacher);
+if(row>0){
+	response.sendRedirect("success.jsp");
+}
+else{
+	response.sendRedirect("fail.jsp");
+}
+%>
+</body>
+</html>
+EditClass.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h1><i>Editing the Class  name</i></h1>
+<form action="editControllerclasses.jsp">
+<input type="hidden" name="id" value=<%=request.getParameter("id") %>>
+class  name to be edited <input type="text" name="name">
+<input type="submit" value="edit">
+
+</form>
+</body>
+</html>
+EditStudent.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h1><i>Editing the Student name</i></h1>
+
+<form action="editControllerstudent.jsp">
+<input type="hidden" name="sid" value=<%=request.getParameter("id") %>>
+First Name to be edited <input type="text" name="fname">
+Last Name to be edited<input type ="text" name="lname">
+<input type="submit" value="edit">
+
+</form>
+
+</body>
+</html>
+EditSubject.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h1><i>Editing the subject name</i></h1>
+<form action="editControllersubject.jsp">
+<input type="hidden" name="subid" value=<%=request.getParameter("id") %>>
+Name to be edited <input type="text" name="subname">
+<input type="submit" value="edit">
+
+</form>
+</body>
+</html>
+EditTeacher.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h1><i>Editing the teacher name</i></h1>
+<form action="editControllerteacher.jsp">
+<input type="hidden" name="tid" value=<%=request.getParameter("id") %>>
+First Name to be edited <input type="text" name="fname">
+Last Name to be edited<input type ="text" name="lname">
+<input type="submit" value="edit">
+
+</form>
+</body>
+</html>
+editControllerclasses.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+    <%@ page import="com.learn.dao.ClassesDao" %>
+    <%@ page import="com.learn.bean.Classes" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<% 
+ClassesDao dao=new ClassesDao();
+Classes c =new Classes();
+c.setClassid(Integer.parseInt(request.getParameter("classid")));
+c.setName(request.getParameter("name"));
+
+int row=dao.edit(c);
+if(row>0){
+	response.sendRedirect("successedit.jsp");
+}
+else{
+	response.sendRedirect("fail.jsp");
+}
+%>
+</body>
+</html>
+editControllerstudent.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+     <%@ page import="com.learn.dao.StudentDao" %>
+    <%@ page import="com.learn.bean.Student" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<%
+StudentDao dao=new StudentDao();
+Student student=new Student();
+student.setSid(Integer.parseInt(request.getParameter("id")));
+student.setFname(request.getParameter("fname"));
+student.setFname(request.getParameter("lname"));
+
+int row=dao.edit(student);
+if(row>0){
+	response.sendRedirect("successedit.jsp");
+}
+else{
+	response.sendRedirect("fail.jsp");
+}
+%>
+</body>
+</html>
+editControllersubject.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+     <%@ page import="com.learn.dao.SubjectDao" %>
+    <%@ page import="com.learn.bean.Subject" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<%
+SubjectDao dao=new SubjectDao();
+Subject s=new Subject();
+s.setSubid(Integer.parseInt(request.getParameter("subid")));
+s.setSubname(request.getParameter("subname"));
+
+
+
+int row=dao.edit(s);
+if(row>0){
+	response.sendRedirect("successedit.jsp");
+}
+else{
+	response.sendRedirect("fail.jsp");
+}
+%>
+</body>
+</html>
+editControllerteacher.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+      <%@ page import="com.learn.dao.TeachersDao" %>
+    <%@ page import="com.learn.bean.Teacher" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<%
+TeachersDao dao=new TeachersDao();
+Teacher t=new Teacher();
+t.setTid(Integer.parseInt(request.getParameter("id")));
+t.setFname(request.getParameter("fname"));
+
+
+
+int row=dao.edit(t);
+if(row>0){
+	response.sendRedirect("successedit.jsp");
+}
+else{
+	response.sendRedirect("fail.jsp");
+}
+%>
+</body>
+</html>
+Success.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h1> Successfully added</h1>
+
+</body>
+</html>
+Sucessedit.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>the record got edited successfully</h1>
+
+</body>
+</html>
+Sucessdelete.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>the record got deleted successfully</h1>
+
+
+</body>
+</html>
+
+
+
+
+SQL Queries.
+
+
+create database db7;
+use db7;
+create table Classes(
+ classid int,
+ name varchar(20)
+ );
+ desc classes;
+ select * from classes;
+ 
+ use db7;
+create table Student(
+sid int,
+fname varchar(40),
+lname varchar(40),
+phone long,
+classname varchar(30)
+);
+desc student;
+select * from student;
+
+use db7;
+create table teacher(
+tid int,
+fname varchar(30),
+lname varchar(30),
+age int
+);
+
+desc teacher;
+select * from teacher;
+
+use db7;
+create table Subject(
+subid int,
+subname varchar(30)
+);
+
+desc subject;
+select * from subject;
+
+
+
+
+
+
+
+
+
